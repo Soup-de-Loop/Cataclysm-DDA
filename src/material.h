@@ -22,6 +22,7 @@ class JsonObject;
 
 using mat_burn_products = std::vector<std::pair<itype_id, float>>;
 using mat_compacts_into = std::vector<itype_id>;
+using mat_shreds_into = std::vector<itype_id>;
 using material_list = std::vector<material_type>;
 using material_id_list = std::vector<material_id>;
 
@@ -64,6 +65,9 @@ class material_type
 
         material_id_list _compact_accepts;
         mat_compacts_into _compacts_into;
+
+        material_id_list _pshredder_accepts;
+        mat_compacts_into _shreds_into;
 
     public:
         material_type();
@@ -110,6 +114,8 @@ class material_type
         const mat_burn_products &burn_products() const;
         const material_id_list &compact_accepts() const;
         const mat_compacts_into &compacts_into() const;
+        const material_id_list &pshredder_accepts() const;
+        const mat_shreds_into &shreds_into() const;
 };
 
 namespace materials
@@ -121,6 +127,7 @@ void reset();
 
 material_list get_all();
 material_list get_compactable();
+material_list get_shreddable();
 std::set<material_id> get_rotting();
 
 } // namespace materials

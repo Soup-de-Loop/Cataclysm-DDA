@@ -3556,6 +3556,114 @@ void iexamine::recycle_compactor( player &, const tripoint &examp )
         add_msg( _( "It spits out an assortment of smaller pieces instead." ) );
     }
 }
+void iexamine::recycle_pshredder( player &, const tripoint &examp )
+{
+    // choose what plastic to recycle
+    auto plastic = materials::get_shreddable();
+    uilist choose_plastic;
+    choose_plastic.text = _( "Recycle what plastic?" );
+    for( auto &m : plastic ) {
+        choose_plastic.addentry( m.name() );
+    }
+    choose_plastic.query();
+    int m_idx = choose_plastic.ret;
+    if( m_idx < 0 || m_idx >= static_cast<int>( plastic.size() ) ) {
+        add_msg( _( "Never mind." ) );
+        return;
+    }
+    material_type m = plastic.at( m_idx );
+
+    // check inputs and tally total mass
+    auto inputs = g->m.i_at( examp );
+    units::mass sum_weight = 0_gram;
+    auto ca = m.pshredder_accepts();
+    std::set<material_id> accepts( ca.begin(), ca.end() );
+    accepts.insert( m.id );
+    for( auto &input : inputs ) {
+        if( !input.only_made_of( accepts ) ) {
+            //~ %1$s: an item in the shredder , %2$s: desired shredder output material
+            add_msg( _( "You realize this isn't going to work because %1$s is not made purely of %2$s." ),
+                     input.tname(), m.name() );
+            return;
+        }
+        if( input.is_container() && !input.is_container_empty() ) {
+            //~ %1$s: an item in the shredder
+            add_msg( _( "You realize this isn't going to work because %1$s has not been emptied of its contents." ),
+                     input.tname() );
+            return;
+        }
+        sum_weight += input.weight();
+    }
+    if( sum_weight <= 0_gram ) {
+        //~ %1$s: desired shredder output material
+        add_msg( _( "There is no %1$s in the shredder.  Drop some plastic items onto it and try again." ),
+                 m.name() );
+        return;
+    }
+
+    // See below for recover_factor (rng(6,9)/10), this
+    // is the normal value of that recover factor.
+    static const double norm_recover_factor = 8.0 / 10.0;
+    const units::mass norm_recover_weight = sum_weight * norm_recover_factor;
+
+    // choose output
+    uilist choose_output;
+    //~ %1$.3f: total mass of material in shredder, %2$s: weight units , %3$s: shredder output material
+    choose_output.text = string_format( _( "Shred %1$.3f %2$s of %3$s into:" ),
+                                        convert_weight( sum_weight ), weight_units(), m.name() );
+    for( auto &ci : m.shreds_into() ) {
+        auto it = item( ci, 0, item::solitary_tag{} );
+        const int amount = norm_recover_weight / it.weight();
+        //~ %1$d: number of, %2$s: output item
+        choose_output.addentry( string_format( _( "about %1$d %2$s" ), amount,
+                                               it.tname( amount ) ) );
+    }
+    choose_output.query();
+    int o_idx = choose_output.ret;
+    if( o_idx < 0 || o_idx >= static_cast<int>( m.shreds_into().size() ) ) {
+        add_msg( _( "Never mind." ) );
+        return;
+    }
+
+    // remove items
+    for( auto it = inputs.begin(); it != inputs.end(); ) {
+        it = inputs.erase( it );
+    }
+
+    // produce outputs
+    double recover_factor = rng( 6, 9 ) / 10.0;
+    sum_weight = sum_weight * recover_factor;
+    sounds::sound( examp, 80, sounds::sound_t::combat, _( "Ka-klunk!" ), true, "tool", "pshredder" );
+    bool out_desired = false;
+    bool out_any = false;
+    for( auto it = m.shreds_into().begin() + o_idx; it != m.shreds_into().end(); ++it ) {
+        const units::mass ow = item( *it, 0, item::solitary_tag{} ).weight();
+        int count = sum_weight / ow;
+        sum_weight -= count * ow;
+        if( count > 0 ) {
+            g->m.spawn_item( examp, *it, count, 1, calendar::turn );
+            if( !out_any ) {
+                out_any = true;
+                if( it == m.shreds_into().begin() + o_idx ) {
+                    out_desired = true;
+                }
+            }
+        }
+    }
+
+    // feedback to user
+    if( !out_any ) {
+        add_msg( _( "The shredder chews up all the items in its hopper." ) );
+        //~ %1$s: shredder output material
+        add_msg( _( "The shredder beeps: \"No %1$s to process!\"" ), m.name() );
+        return;
+    }
+    if( !out_desired ) {
+        //~ %1$s: shredder output material
+        add_msg( _( "The shredder beeps: \"Insufficient %1$s!\"" ), m.name() );
+        add_msg( _( "It spits out an assortment of smaller pieces instead." ) );
+    }
+}
 
 void iexamine::trap( player &p, const tripoint &examp )
 {
@@ -5769,6 +5877,7 @@ iexamine_function iexamine_function_from_string( const std::string &function_nam
             { "tree_maple_tapped", &iexamine::tree_maple_tapped },
             { "shrub_wildveggies", &iexamine::shrub_wildveggies },
             { "recycle_compactor", &iexamine::recycle_compactor },
+            { "recycle_pshredder", &iexamine::recycle_pshredder },
             { "trap", &iexamine::trap },
             { "water_source", &iexamine::water_source },
             { "clean_water_source", &iexamine::clean_water_source },

@@ -261,5 +261,20 @@
     "symbol": "T",
     "color": "red",
     "flags": [ "DURABLE_MELEE" ]
+  },
+  {
+    "id": "plastic_shredder",
+    "type": "TOOL",
+    "name": "Plastic Recycling Shredder",
+    "description": "A complex machine capable of shredding plastics down into usable scrap.",
+    "weight": "60000 g",
+    "volume": "100 L",
+    "price": 100000,
+    "to_hit": -5,
+    "bashing": 40,
+    "material": "steel",
+    "symbol": "&",
+    "color": "green",
+    "flags": [ "DURABLE_MELEE" ]
   }
 ]

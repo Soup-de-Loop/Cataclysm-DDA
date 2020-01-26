@@ -3307,5 +3307,16 @@
     "components": [ [ [ "stick", 4 ], [ "log", 1 ] ], [ [ "nail", 20 ] ], [ [ "pine_bough", 8 ] ] ],
     "pre_special": "check_empty",
     "post_terrain": "f_decorative_tree"
+  },
+  {
+    "type": "construction",
+    "description": "Place Plastic Recycler",
+    "//": "Set up Plastic Recycler",
+    "category": "CONSTRUCT",
+    "required_skills": [ [ "fabrication", 2 ] ],
+    "time": "40 m",
+    "components": [ [ [ "plastic_shredder", 1 ] ] ],
+    "pre_special": "check_empty",
+    "post_terrain": "f_pshredder"
   }
 ]

@@ -177,6 +177,31 @@
   },
   {
     "type": "recipe",
+    "result": "plastic_shredder",
+    "category": "CC_OTHER",
+    "skill_used": "fabrication",
+    "skills_required": [ "fabrication", 4 ],
+    "difficulty": 4,
+    "time": "8 h 20 m",
+    "reversible": true,
+    "decomp_learn": 2,
+    "autolearn": true,
+    "qualities": [ { "id": "SCREW", "level": 1 }, { "id": "HAMMER", "level": 2 }, { "id": "SAW_M", "level": 2 } ],
+    "components": [
+      [ [ "sheet_metal_small", 3 ] ],
+      [ [ "nail", 100 ] ],
+      [ [ "pipe", 10 ] ],
+      [ [ "funnel", 1 ], [ "metal_funnel", 1 ], [ "makeshift_funnel", 1 ] ],
+      [ [ "chain", 4 ] ],
+      [ [ "steel_plate", 4 ] ],
+      [ [ "cable", 4 ] ],
+      [ [ "motor_small", 2 ] ],
+      [ [ "blade", 10 ] ],
+      [ [ "rebar", 2 ], [ "steel_chunk", 4 ] ]
+    ]
+  },
+  {
+    "type": "recipe",
     "result": "water_mill",
     "category": "CC_OTHER",
     "skill_used": "fabrication",

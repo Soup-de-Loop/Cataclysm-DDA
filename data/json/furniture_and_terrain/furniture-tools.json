@@ -1106,5 +1106,33 @@
         { "item": "scrap_copper", "count": [ 0, 2 ] }
       ]
     }
+  },
+  {
+    "type": "furniture",
+    "id": "f_pshredder",
+    "name": "plastic shredder",
+    "looks_like": "t_recycler",
+    "description": "A complex machine capable of shredding plastics and reducing them to usable scrap.",
+    "symbol": "&",
+    "color": "green",
+    "move_cost_mod": 8,
+    "coverage": 40,
+    "required_str": 10,
+    "flags": [ "PLACE_ITEM", "BLOCKSDOOR", "TRANSPARENT", "MOUNTABLE" ],
+    "examine_action": "recycle_pshredder",
+    "//": "attempt to make a placeable alternate version of the recycler/compactor",
+    "bash": {
+      "str_min": 40,
+      "str_max": 150,
+      "sound_fail": "clang!",
+      "items": [
+        { "item": "cable", "charges": [ 0, 4 ] },
+        { "item": "scrap", "count": [ 8, 12 ] },
+        { "item": "steel_chunk", "count": [ 2, 4 ] },
+        { "item": "plastic_chunk", "count": [ 4, 10 ] },
+        { "item": "steel_plate", "count": [ 2, 4 ] }
+      ]
+    },
+    "deconstruct": { "items": [ { "item": "plastic_shredder", "count": 1 } ] }
   }
 ]

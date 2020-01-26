@@ -83,6 +83,7 @@ void shrub_marloss( player &p, const tripoint &examp );
 void tree_marloss( player &p, const tripoint &examp );
 void shrub_wildveggies( player &p, const tripoint &examp );
 void recycle_compactor( player &p, const tripoint &examp );
+void recycle_pshredder( player &p, const tripoint &examp );
 void trap( player &p, const tripoint &examp );
 void water_source( player &p, const tripoint &examp );
 void clean_water_source( player &, const tripoint &examp );

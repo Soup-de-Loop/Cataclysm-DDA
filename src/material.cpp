@@ -110,6 +110,10 @@ void material_type::load( const JsonObject &jsobj, const std::string & )
     optional( jsobj, was_loaded, "compact_accepts", _compact_accepts,
               auto_flags_reader<material_id>() );
     optional( jsobj, was_loaded, "compacts_into", _compacts_into, string_reader() );
+
+    optional( jsobj, was_loaded, "pshredder_accepts", _pshredder_accepts,
+              auto_flags_reader<material_id>() );
+    optional( jsobj, was_loaded, "shreds_into", _shreds_into, string_reader() );
 }
 
 void material_type::check() const
@@ -134,6 +138,16 @@ void material_type::check() const
     for( auto &ci : _compacts_into ) {
         if( !item::type_is_defined( ci ) || !item( ci, 0 ).only_made_of( std::set<material_id> { id } ) ) {
             debugmsg( "invalid \"compacts_into\" %s for %s.", ci.c_str(), id.c_str() );
+        }
+    }
+    for( auto &ca : _pshredder_accepts ) {
+        if( !ca.is_valid() ) {
+            debugmsg( "invalid \"pshredder_accepts\" %s for %s.", ca.c_str(), id.c_str() );
+        }
+    }
+    for( auto &ci : _shreds_into ) {
+        if( !item::type_is_defined( ci ) || !item( ci, 0 ).only_made_of( std::set<material_id> { id } ) ) {
+            debugmsg( "invalid \"shreds_into\" %s for %s.", ci.c_str(), id.c_str() );
         }
     }
 }
@@ -269,9 +283,19 @@ const material_id_list &material_type::compact_accepts() const
     return _compact_accepts;
 }
 
+const material_id_list &material_type::pshredder_accepts() const
+{
+    return _pshredder_accepts;
+}
+
 const mat_compacts_into &material_type::compacts_into() const
 {
     return _compacts_into;
+}
+
+const mat_shreds_into &material_type::shreds_into() const
+{
+    return _shreds_into;
 }
 
 void materials::load( const JsonObject &jo, const std::string &src )
@@ -303,6 +327,17 @@ material_list materials::get_compactable()
         return !mt.compacts_into().empty();
     } );
     return compactable;
+}
+
+material_list materials::get_shreddable()
+{
+    material_list all = get_all();
+    material_list shreddable;
+    std::copy_if( all.begin(), all.end(),
+    std::back_inserter( shreddable ), []( const material_type & mt ) {
+        return !mt.shreds_into().empty();
+    } );
+    return shreddable;
 }
 
 std::set<material_id> materials::get_rotting()
