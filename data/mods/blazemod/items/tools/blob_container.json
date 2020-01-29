@@ -6,7 +6,7 @@
     "name_plural": "gelatinous capsules",
     "description": "While the blob is very eager to be fed, it's not as enthusiastic about giving up liquids.  A few alterations are necessary.",
     "weight": "6662 g",
-    "volume": "5 L",
+    "volume": "10 L",
     "price": 100,
     "to_hit": -2,
     "material": [ "flesh" ],
