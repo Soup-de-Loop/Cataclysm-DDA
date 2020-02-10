@@ -1,9 +1,9 @@
 [
   {
-    "id": "diamondlance",
-    "copy-from": "turret_manual_blaze",
+    "id": "mounted_diamondlance",
+    "copy-from": "turret",
     "type": "vehicle_part",
-    "name": "diamond lance",
+    "name": { "str": "diamond lance" },
     "item": "diamondlance",
     "color": "white",
     "broken_color": "white",
@@ -14,10 +14,10 @@
     "requirements": { "install": { "skills": [ [ "mechanics", 4 ] ] }, "removal": { "skills": [ [ "mechanics", 2 ] ] } }
   },
   {
-    "id": "diamondnova",
-    "copy-from": "turret_manual_blaze",
+    "id": "mounted_diamondnova",
+    "copy-from": "turret",
     "type": "vehicle_part",
-    "name": "diamond nova",
+    "name": { "str": "diamond nova" },
     "item": "diamondnova",
     "color": "white",
     "broken_color": "white",
